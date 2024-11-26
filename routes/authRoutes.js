@@ -8,7 +8,6 @@ const router = express.Router();
 router.post('/signup', async (req, res) => {
     const { email, password } = req.body;
 
-    console.log('Received signup request:', req.body);
     try {
         // Check if the user already exists
         const existingUser  = await User.findOne({ email });
@@ -33,7 +32,9 @@ router.post('/signup', async (req, res) => {
 // Login
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
+
     const user = await User.findOne({ email });
+
     if (!user || !(await bcrypt.compare(password, user.password))) {
         return res.status(401).json({ message: 'Invalid credentials' });
     }
