@@ -3,13 +3,15 @@ const Product = require('../models/Product');
 const router = express.Router();
 
 // Fetch products with pagination and filters
-router.get('/', async (req, res) => {
-    const { page = 1, limit = 10, category, priceRange } = req.query;
+router.get('/products', async (req, res) => {
+    const { page = 1, limit = 12, category, minPrice, maxPrice } = req.query;
     const query = {};
 
     if (category) query.category = category;
-    if (priceRange) {
-        const [min, max] = priceRange.split(',');
+    if (minPrice || maxPrice) {
+        const min = minPrice ? parseFloat(minPrice) : 0;
+        const max = maxPrice ? parseFloat(maxPrice) : Number.MAX_VALUE;
+
         query.price = { $gte: min, $lte: max };
     }
 
